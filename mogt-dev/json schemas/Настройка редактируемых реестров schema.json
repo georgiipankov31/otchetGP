@@ -1,0 +1,253 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Настройка редактируемых реестров",
+    "properties": {
+      "header": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "col": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "имя колонки, если не совпадает с наименованием показателя/ любое другое наименование столбца",
+                    "examples": [
+                      "Застройщик"
+                    ]
+                  },
+                  "width": {
+                    "type": "string",
+                    "pattern": "^[0-9]+[pP][xX]$",
+                    "description": "ширина колонки",
+                    "examples": [
+                      "175px"
+                    ]
+                  },
+                  "val_tid": {
+                    "type": "integer",
+                    "description": "наименование показателя",
+                    "examples": [
+                      -547
+                    ]
+                  },
+                  "sort_param": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "сортировка. При значении 0 либо отсутствии записи sort_param сортировки у столбца не будет! Если указать  'sort_param: 1' - то стрелки сортировки появятся.",
+                    "examples": [
+                      0
+                    ]
+                  }
+                },
+                "additionalProperties": false,
+                "oneOf":[
+                  {
+                    "oneOf":[
+                    {
+                      "required": ["name"
+                    ]
+                  },
+                  {
+                    "required": ["val_tid"
+                  ]
+                }
+              ]
+            },
+            {
+              "required":["name", "val_tid"]
+            }
+            
+                ],
+                
+                "description": "столбцы заголовка"
+              }
+            }
+          },
+          "required": [
+            "col"
+          ],
+          "additionalProperties": false
+        },
+        "description": "заголовки"
+      },
+      "row": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "col": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "function_name": {
+                    "enum": [
+                      "text_type",
+                      "aux_type",
+                      "href_type"
+                    ],
+                    "description": "имя, функции бывает 3 видов: 1)text_type( любые значения принадлежащие карточке), 2)href_type(ссылки 3 - x типов), 3)aux_type(это есть ячейка сложная, и только в базе прописать ее можно)"
+                  },
+                  "line": {
+                    "type": "object",
+                    "properties": {
+                      "style": {
+                        "enum": [
+                          "bold",
+                          "blue",
+                          "small-grey",
+                          "bg-blue",
+                          "bg-grey"
+                        ],
+                        "description": "стиль текста"
+                      },
+                      "val_text": {
+                        "type": "string",
+                        "description": "текст перед значением val_tid",
+                        "examples": [
+                          "Дата ГС (Концепция)"
+                        ]
+                      },
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "val_tid": {
+                              "type": "integer",
+                              "description": "id показателя",
+                              "examples": [
+                                675
+                              ]
+                            },
+                            "style": {
+                              "enum": [
+                                "bold",
+                                "blue",
+                                "small-grey",
+                                "bg-blue",
+                                "bg-grey"
+                              ],
+                              "description": "стиль текста"
+                            },
+                            "val_text": {
+                              "type": "string",
+                              "description": "текст перед значением val_tid",
+                              "examples": [
+                                "Дата ГС (Концепция)"
+                              ]
+                            },
+                            "suffix": {
+                              "type": "string",
+                              "description": "текст после показателя",
+                              "examples": [
+                                "До"
+                              ]
+                            },
+                            "preffix": {
+                              "type": "string",
+                              "description": "текст после показателя",
+                              "examples": [
+                                "После"
+                              ]
+                            }
+                          },
+                          "additionalProperties": false,
+                          "description": "содержит тест"
+                        }
+                      },
+                      "link_itid": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Если указано link_itid, то данная информация тащиться из связанного реестра",
+                        "examples": [
+                          384
+                        ]
+                      },
+                      "role_id": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "link_itid можно указать тип связи role_id, значит будут тащиться связанные реестры с типом связи 3 (по умолчанию с 1-ым (ссылается) типом связи)",
+                        "examples": [
+                          3
+                        ]
+                      },
+                      "link_through": {
+                        "oneOf":[
+                          {
+                            "type": "integer",
+                            "minimum": 0
+                          },
+                          {
+                            "type":"array",
+                            "items": 
+                            {
+                              "type":"integer",
+                              "minimum": 0
+                            },
+                            "minItems": 1
+                          }
+                        ],
+                        "description": "связь к реестру  link_itid через реестр",
+                        "examples": [
+                          575, [575]
+                        ]
+                      },
+                      "role_through_id": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "тип связи c реестром",
+                        "examples": [
+                          1
+                        ]
+                      },
+                      "aux_function": {
+                        "type": "string",
+                        "description": "информация по столбцу прописывается функциями программистов",
+                        "examples": [
+                          "snippet_ugdmo_zayvka"
+                        ]
+                      },
+                      "href_type": {
+                        "enum": [
+                          "href_card",
+                          "href_docs",
+                          "href_files"
+                        ],
+                        "description": "1) 'href_type' : 'href_card' - содержит ссылку на карточку('https://ugd.mosreg.ru/app/gs/card/'||id связанной карточки||'/'), но необходимо указать связанный реестр в 'link_itid' (смотреть дальше) 2) 'href_type : 'href_docs' - содержит ссылку на связанный реестр('/app/'||wmode||'/docs/390/?_search_context=did='||did), но необходимо указать связанный реестр в 'link_itid' (смотреть дальше) 3) 'href_type' : 'href_files' - содержит ссылку на карточку('app/files/download/'), но необходимо указать 'name_folder' - наименование папки, откуда тащить файл "
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "содержит информацию, которая будет выводиться"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "function_name",
+                  "line"
+                ],
+                "description": "каждая колонка"
+              }
+            }
+
+          },
+          "required": [
+            "col"
+          ],
+          "additionalProperties": false,
+          "description": "вся строка"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "row"
+    ],
+    "description": "Вся строка с колонками внутри описывается в row, а заголовок хранятся в header"
+  }
