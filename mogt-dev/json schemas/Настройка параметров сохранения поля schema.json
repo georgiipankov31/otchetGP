@@ -1,0 +1,368 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Настройка параметров сохранения поля",
+    "description": "",
+    "properties": {
+      "action_form": {
+        "enum": [
+          "dif",
+          "any"
+        ],
+        "description": "В случае action_form=any, json в зависимости от любого значения в поле. В случае action_form= dif,  json в зависимости от сохраняемого значения в поле"
+      },
+      "action_choice": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "function_name": {
+                    "enum": [
+                      "save_objtep",
+                      "show_hide",
+                      "aux_prc",
+                      "sidepanel_reload",
+                      "delete_link",
+                      "window_reload",
+                      "archive_files",
+                      "create_notification",
+                      "alert",
+                      "act_show_hide",
+                      "cat_id",
+                      "cat_tids",
+                      "sidebar_reload",
+                      ""
+                    ],
+                    "description": "function name: 1)alert - окно уведомления (msg - текст уведомления, type - тип уведомления (info, success, warning, error) ), 2)window_reload - перезагрузка страницы, 3)show_hide - скрытие и показ другого поля(act_show_hide - действие(hide_fields скрыть,show_fields показать)cat_id или tids - id категорий, или id полей которые надо скрыть или показать), 4)save_objtep - сохранение другого поля, после сохранения (tid - id другого поля, class_val_id - значение id, itid_save - id реестра, в котором сохраняем) 5)create_notification - отправка уведомления (tid или usr_id - id поля, где указан пользователь или id карточки пользователя, которому необходимо отправить уведомление subject - тема уведомления text_notific - текст уведомления type_notific: create_card_user - тип уведомления для обычного текстового уведомления type_notific: replace_param_value - тип уведомления, если в тексте уведомления есть скобочки [ ] с прописанным внутри id полем function_name: create_notification - функция создания уведомления [href_card] - такой элемент в text_notific преобразуется в карточку) 6)aux_prc - вызов aux процедуры 7) sidepanel_reload - перезагрузка сайдпанели, добавлять для каждого действия data, обновляет карточку документа"
+                  },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "tid": {
+                        "type": "integer",
+                        "description": "id поля, где указан пользователь или id карточки пользователя, которому необходимо отправить уведомление",
+                        "examples": [
+                          -1,
+                          2
+                        ]
+                      },
+                      "val": {
+                        "type": "string",
+                        "description": "значение либо id значение из справочника, которого надо сохранить в другом поле",
+                        "examples": [
+                          "[current_date]"
+                        ]
+                      },
+                      "itid_save": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "id реестра, в котором сохраняем",
+                        "examples": [
+                          567
+                        ]
+                      },
+                      "tep_id_from": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "из какого поля берем значение при 'val'='[val_from_tep]'",
+                        "examples": [
+                          564
+                        ]
+                      },
+                      "link_itid": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "examples": [
+                          3
+                        ]
+                      },
+                      "link_role": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "examples": [
+                          4
+                        ]
+                      },
+                      "class_val_id": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "значение либо id значение из справочника, которого надо сохранить в другом поле",
+                        "examples": [
+                          756
+                        ]
+                      },
+                      "subject": {
+                        "type": "string",
+                        "description": "тема уведомления",
+                        "examples": [
+                          "Обновлен статус исполнения решения"
+                        ]
+                      },
+                      "text_notific": {
+                        "type": "string",
+                        "description": "текст уведомления",
+                        "examples": [
+                          "Обновлен статус исполнения решения по пункту № [9724] протокола заседания от [8646] № [8645] ([8647])."
+                        ]
+                      },
+                      "type_notific": {
+                        "type": "string",
+                        "description": "тип уведомления",
+                        "examples": [
+                          "create_card_user"
+                        ]
+                      },
+                      "usr_id": {
+                        "type": "integer",
+                        "description": "id поля, где указан пользователь или id карточки пользователя, которому необходимо отправить уведомление",
+                        "examples": [
+                          43
+                        ]
+                      },
+                      "tids": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "integer"
+                            }
+                          }
+                        ],
+                        "description": "id категорий, или id полей которые надо скрыть или показать",
+                        "examples": [
+                          12,
+                          -14,
+                          [
+                            74,
+                            -67
+                          ],
+                          [
+                            -65
+                          ]
+                        ]
+                      },
+                      "act_show_hide": {
+                        "enum": [
+                          "hide_fields",
+                          "show_fields"
+                        ],
+                        "description": "действие, принимает значения: - hide_fields (скрыть)- show_fields (показать)"
+                      },
+                      "aux_func_name": {
+                        "type": "string",
+                        "description": "имя aux процедуры",
+                        "examples": [
+                          "имя aux"
+                        ]
+                      },
+                      "cat_id": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                              "type": "integer"
+                            }
+                          }
+                        ],
+                        "description": "id категорий, или id полей которые надо скрыть или показать",
+                        "examples": [
+                          12,
+                          -14,
+                          [
+                            74,
+                            -67
+                          ],
+                          [
+                            -65
+                          ]
+                        ]
+                      },
+                      
+                      "msg": {
+                        "type": "string",
+                        "description": "текст уведомления",
+                        "examples": [
+                          "текст уведомления"
+                        ]
+                      },
+                      "type": {
+                        "enum": [
+                          "info",
+                          "success",
+                          "warning",
+                          "error"
+                        ],
+                        "description": "тип уведомления"
+                      },
+                      "hide_show": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "tid": {
+                              "type": "integer"
+                            },
+                            "itid": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "tid",
+                            "itid"
+                          ]
+                        },
+                        "description": "если необходимо использовать зависимость от двух полей, то используется hide_show, а затем - hide_show_2"
+                      },
+                      "hide_show_2": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "tid": {
+                              "type": "integer"
+                            },
+                            "itid": {
+                              "type": "integer"
+                            }
+                          },
+                          "required": [
+                            "tid",
+                            "itid"
+                          ]
+                        },
+                        "description": "если необходимо использовать зависимость от двух полей, то используется hide_show, а затем - hide_show_2"
+                      },
+                      "func_data": {
+                        "type": "object",
+                        "properties": {
+                          "did": {
+                            "type": "string",
+                            "description": "|в документации не указано|",
+                            "enum": [
+                              "#did#"
+                            ],
+                            "examples": [
+                              "#did#"
+                            ]
+                          },
+                          "itid_folder":{"type":"integer","examples": [2]},
+                          "folder_cls_id_to":{"type":"integer", "examples": [2]},
+                          "folder_cls_id_from":{"type":"integer", "examples": [2]},
+                          "prefix":{"type":"string", "examples": ["УИК №"]},
+                          "cur_tid":{"type":"integer","examples": [2]},
+                          "return_info": {
+                            "enum": [
+                              0,
+                              1
+                            ],
+                            "description": "0 - означает выводить (1) или нет (0) результат отработки функции"
+                          },
+                          "tid": {
+                            "type": "integer",
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "val": {
+                            "type": "string",
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "subject": {
+                            "type": "string",
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "text_notific": {
+                            "type": "string",
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "act": {
+                            "type": "string",
+                            "enum": [
+                              "open",
+                              "close"
+                            ],
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "code_status":
+                          {
+                            "type":"string",
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "do_not_send_to_cab":
+                          {
+                            "enum": [1,"1", 0, "0"],
+                            "description": "НЕ УКАЗАНО"
+                          },
+                          "server_param":{"type":"string", "description": "НЕ УКАЗАН"},
+                          "save_objtep":
+                          {
+                            "type":"array",
+                            "minItems": 1,
+                            "items": 
+                            {
+                              "type":"object",
+                              "additionalProperties": false,
+                             "minProperties": 1,
+                             "properties": 
+                             {
+                               "tid":{"type": "integer"},
+                               "val":{"type":"string"}
+                             }
+                            },
+                            "description": "НЕ УКАЗАН"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "minProperties": 1,
+                        "description": "return_info  означает выводить (1) или нет (0) результат отработки функции"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "настройки функции"
+                  }
+                }
+                
+              },
+              "description": "все настройки action "
+            },
+            "new_val": {
+              "type": "string",
+              "description": "|не найдено в документации|",
+              "examples": [
+                "Исполнено"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "data",
+            "new_val"
+          ]
+        },
+        "description": "массив с элементами action"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "action_form",
+      "action_choice"
+    ]
+  }
+
+  

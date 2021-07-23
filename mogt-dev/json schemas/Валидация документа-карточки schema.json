@@ -1,0 +1,398 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Валидация документа-карточки",
+    "description": "представляет собой массив valid_card_data,состоящий из 1 и более объектов json",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "valid_card_data"
+    ],
+    "properties": {
+      "valid_card_data": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type_valid",
+            "data_valid"
+          ],
+          "properties": {
+            "type_valid": {
+              "enum": [
+                "required_fields",
+                "fields",
+                "files",
+                "links",
+                "link_if_field",
+                "link_or_field",
+                "aux_valid",
+                "links_with_geom",
+                "exists_geom_data"
+              ],
+              "description": "a. - required_fields (проверка заполнения обязательных полей) b. - fields (различные дополнительные проверки полей) c. - files (проверка файлов в дереве папок документа) d. - links (проверка связей документа с карточками другого реестра) e. - link_if_field (проверка наличия связи с карточкой другого реестра, при определенном значении поля в текущей карточке) f. - link_or_field (проверка наличия связи либо значения поля документа) g. aux_valid – кастомная функция, которая производит дополнительные проверки. Данные процедуру создает в БД разработчик ИС. Пример файл «app_valid_doc_aux.sql»."
+            },
+            "error_message": {
+                "type": "string",
+                "description": "текст ошибки в случае не прохождения проверки. Необязательный элемент, в случае отсутствия заполнится автоматическим сообщении в зависимости от типа проверки,  для required_fields"
+              },
+            "data_valid": {
+              "description": "параметры каждого типа проверки",
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "minProperties": 1,
+                  "properties": {
+                    "options":
+                    {
+                        "type":"object",
+                        "minProperties": 1,
+                        "additionalProperties": false,
+                        "properties": 
+                        {
+                            "prc_valid_name": {
+                                "type": "string",
+                                "examples": [
+                                  "app_rest.app_valid_doc_aux"
+                                ],
+                                "description": "для aux_valid наименование хранимой функции в БД"
+                              },
+                              "func_data": {
+                                "type": "object",
+                                "minProperties": 1,
+                                "additionalProperties": false,
+                                "description": "обязательный объект для aux_valid, описывающий дополнительные параметры для передачи в функцию",
+                                "properties": {
+                                  "did": {
+                                    "enum": [
+                                      "#did#"
+                                    ]
+                                  }
+                                }
+                              }
+                        }
+                    },
+                    "link_itid_id": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "число-идентификатор документа, с которым должна проводиться проверка на наличие связи",
+                        "examples": [
+                          79,
+                          15
+                        ]
+                      },
+                    "prc_valid_name": {
+                      "type": "string",
+                      "examples": [
+                        "app_rest.app_valid_doc_aux"
+                      ],
+                      "description": "для aux_valid наименование хранимой функции в БД"
+                    },
+                    "func_data": {
+                      "type": "object",
+                      "minProperties": 1,
+                      "additionalProperties": false,
+                      "description": "обязательный объект для aux_valid, описывающий дополнительные параметры для передачи в функцию",
+                      "properties": {
+                        "did": {
+                          "enum": [
+                            "#did#"
+                          ]
+                        }
+                      }
+                    },
+                    "need_check": {
+                      "enum": [
+                        0,
+                        1
+                      ],
+                      "description": "0 (проверка не проводится), 1 (проверка проводится), для required_fields"
+                    },
+                    "error_message": {
+                      "type": "string",
+                      "description": "текст ошибки в случае не прохождения проверки. Необязательный элемент, в случае отсутствия заполнится автоматическим сообщении в зависимости от типа проверки,  для required_fields"
+                    },
+                    "folder_cls_id": {
+                      "description": "идентификатор наименования папки, в дереве папок документа, для files ",
+                      "type": "integer",
+                      "minimum": 0,
+                      "examples": [
+                        3597
+                      ]
+                    },
+                    "check_file_param": {
+                      "type": "array",
+                      "description": "обязательный для files элемент-массив, представляющий содержащий в себе от 1 до n объектов",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "minProperties": 1,
+                        "properties": {
+                          "error_message": {
+                            "description": "тип проверки файлов, может принимать следующие значения: - max_size – максимальный вес всех файлов в папке, без учета sig файлов - min_size – минимальный вес всех файлов в папке, без учета sig файлов - file_count_max – максимальное количество файлов в папке, без учета sig файлов - file_count_min – минимальное количество файлов в папке, без учета sig файлов - file_type – допустимые форматы файлов в папке - regexp_name – соответствие имени файла регулярному выражению - sig_check – проверка наличия ЭЦП у файлов в папке",
+                            "type": "string",
+                            "examples": [
+                              "Текст сообщения по файлу min_size"
+                            ]
+                          },
+                          "type_file_check": {
+                            "enum": [
+                              "max_size",
+                              "min_size",
+                              "file_count_max",
+                              "file_count_min",
+                              "file_type",
+                              "regexp_name",
+                              "sig_check"
+                            ],
+                            "description": "тип проверки файлов, может принимать следующие значения: - max_size – максимальный вес всех файлов в папке, без учета sig файлов - min_size – минимальный вес всех файлов в папке, без учета sig файлов - file_count_max – максимальное количество файлов в папке, без учета sig файлов - file_count_min – минимальное количество файлов в папке, без учета sig файлов - file_type – допустимые форматы файлов в папке - regexp_name – соответствие имени файла регулярному выражению - sig_check – проверка наличия ЭЦП у файлов в папке"
+                          },
+                          "max_size": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "числовое значение, описывающее максимальный вес файлов в байтах",
+                            "examples": [
+                              1024
+                            ]
+                          },
+                          "min_size": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "числовое значение, описывающее минимальный вес файлов в байтах",
+                            "examples": [
+                              1
+                            ]
+                          },
+                          "file_type": {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                              "enum": [
+                                ".jpg",
+                                ".docx",
+                                ".doc",
+                                ".pdf",
+                                ".txt",
+                                ".rtf",
+                                ".xls",
+                                ".xlsx",
+                                ".ofd",
+                                ".xml",
+                                ".zip",
+                                ".mid",
+                                ".mif",
+                                ".tab",
+                                ".shp",
+                                ".sxf",
+                                ".idf",
+                                ".qgs",
+                                ".tiff",
+                                ".jpeg",
+                                ".bmp",
+                                ".png",
+                                ".rar",
+                                ".dwg",
+                                ".tif"
+                              ]
+                            },
+                            "description": "массив, принимает значения форматов файлов в виде массива через запятую"
+                          },
+                          "file_count_max": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "examples": [
+                              4
+                            ],
+                            "description": "числовое значение, описывающее максимальное количество файлов в папке"
+                          },
+                          "file_count_min": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "examples": [
+                              4
+                            ],
+                            "description": "числовое значение, описывающее минимальное количество файлов в папке"
+                          },
+                          "file_regexp_name": {
+                            "type": "string",
+                            "examples": [
+                              "GKUOKS_.*.xml"
+                            ],
+                            "description": "регулярное выражение, описывающее имя файла"
+                          },
+                          "sig_check": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "examples": [
+                              1
+                            ],
+                            "description": "– принимает значения: - 0 (проверка не проводится) - 1 (проверка проводится)"
+                          }
+                        }
+                      }
+                    },
+                    "link_type": {
+                      "enum": [
+                        "all",
+                        "any",
+                        "one_of"
+                      ],
+                      "description": "для links элемент, определяющий тип проверки связей. Принимает значения: a. all – обязательное наличие связей со всеми реестрами, указанными в массиве links_itid b. any – обязательное наличие связи, с любым из типов документа, указанного в массиве links_itid c. one_of – обязательное наличие связи, только с одним из типов документа, указанного в массиве links_itid"
+                    },
+                    "links_itid": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "minProperties": 1,
+                        "properties": {
+                          "link_itid_id": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "examples": [
+                              79,
+                              15
+                            ]
+                          },
+                          "error_message": {
+                            "type": "string",
+                            "examples": [
+                              "Поле Наименование документа должно быть заполнено значениями 'Утвержден или 'Отменен' "
+                            ],
+                            "description": "текст ошибки в случае не прохождения проверки. Необязательный элемент, в случае отсутствия заполнится автоматическим сообщении в зависимости от типа проверки, для fields"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "minProperties": 1,
+                    "properties": {
+                      "tep_id": {
+                        "type": "integer",
+                        "description": "идентификатор поля документа, для fields",
+                        "examples": [
+                          1599
+                        ]
+                      },
+                      "error_message": {
+                        "type": "string",
+                        "examples": [
+                          "Поле Наименование документа должно быть заполнено значениями 'Утвержден или 'Отменен' "
+                        ],
+                        "description": "текст ошибки в случае не прохождения проверки. Необязательный элемент, в случае отсутствия заполнится автоматическим сообщении в зависимости от типа проверки, для fields"
+                      },
+                      "tep_value": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ],
+                        "description": "необходимые значения в поле. Необязательный элемент, в случае его наличия система будет проверять, заполнено ли поле документа определенными значениями, для fields",
+                        "examples": [
+                          [
+                            "Утвержден",
+                            "Отменен"
+                          ]
+                        ]
+                      },
+                      "link_itid_id": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "число-идентификатор документа, с которым должна проводиться проверка на наличие связи",
+                        "examples": [
+                          79,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "name": {
+              "type": "string",
+              "examples": [
+                "Проверка заполненности обязательных полей"
+              ],
+              "description": "наименование проверки. Необязательный элемент, администратор добавляет на свое усмотрение, чтобы в дальнейшем было понятнее читать настройку валидации"
+            }
+          }
+        }
+      },
+      "auto-munobr-links": {"enum": [true,false,1,0],"description": "не указано"},
+      "archive": 
+      {
+          "type":"integer",
+          "minimum": 0,
+          "description": "не указано"
+      },
+      "reg_control":
+    {
+        "type":"object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": 
+        {
+            "located": 
+            {
+                "type":"string",
+                "description": "не указано"
+            },
+            "copy_geom_from":
+            {
+                "type": "object",
+                "additionalProperties": false,
+                "minProperties": 1,
+                "properties": 
+                {
+                    "feature": 
+            {
+                "type":"integer"
+            },
+            "reestr_from":
+            {
+                "type":"string"
+            },
+            "category_from":{"type": "integer"}
+                }
+            },
+            "feature": 
+            {
+                "type":"integer"
+            },
+            "reestr_from":
+            {
+                "type":"string"
+            },
+            "category_from":{"type": "integer"}
+        },
+        "description": "не указано"
+        
+    },
+    "create_new_confirm": 
+    {
+        "type":"string",
+        "description": "не указано"
+    }
+    }
+    
+  }

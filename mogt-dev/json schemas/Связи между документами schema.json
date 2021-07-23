@@ -1,0 +1,258 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Связи между документами",
+    "description": "Администрирование - Связи между документами - Добавить связь - id реестра Главный документ - id реестра Тип документа на который необходимо ссылаться",
+    "additionalProperties": false,
+    "type": "object",
+    "properties": {
+      "link_roles": {
+        "oneOf": [
+          {
+            "type": "integer",
+            "minimum": 0
+          },
+          {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        ],
+        "description": "родительский параметр, который указывает на варианты типов связей с карточкой данного реестра. Значения в виде чисел через запятую,где номер это значение роли",
+        "examples": [
+          [
+            5,
+            6
+          ],
+          15
+        ]
+      },
+      "show_param": {
+        "description": "родительский параметр, который определяет возможность показа связанных карточек в карточке основного документа",
+        "oneOf":[
+            {
+                "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "modal": {
+            "enum": [
+              0,
+              1
+            ],
+            "description": "признак, который определяет, где находится аккордеон, содержит в себе два значения:1 - находится в модалке, предполагает работу с аккордеоном в техпроцессе или в боковом окне0 - акоррдеон находится не в модалке"
+          },
+          "place_show": {
+           "oneOf":[
+               { 
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "card_place": {
+                    "description": "место в карточке(снизу или сверху карточки)",
+                    "enum": [
+                      "below",
+                      "on_top"
+                    ]
+                  },
+                  "after_catid": {
+                    "description": "показывать связанные карточки. Не вставлять в случае использования параметра card_place",
+                    "type": "integer",
+                    "minimum": 0,
+                    "examples": [
+                      1,
+                      6574,
+                      567
+                    ]
+                  },
+                  "wiz_id": {
+                    "oneOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    ],
+                    "description": "id шага техпроцесса, на котором необходимо выводить связанный реестр",
+                    "examples": [
+                      [
+                        5,
+                        6
+                      ],
+                      15
+                    ]
+                  },
+                  "form_show": {
+                    "enum": [
+                      "table",
+                      "accordion"
+                    ],
+                    "description": "вид отображения(в виде аккордиона или таблицы)"
+                  },
+                  "type_show": {
+                    "enum": [
+                      "edit",
+                      "show"
+                    ],
+                    "description": "формат отображения(карточки можно(нет)редактировать)"
+                  },
+                  "function_name":{
+                      "enum": ["window_reload"],
+                      "description": "имя функции"
+                  }
+                },
+                "minProperties": 1},
+                {
+                    "enum": [
+                        "below",
+                        "on_top"
+                      ]
+                }
+           ],
+            "description": "место показа связанных карточек"
+          },
+          "type_show": {
+            "enum": [
+              "edit",
+              "show",
+              "view"
+            ],
+            "description": "формат отображения(карточки можно(нет)редактировать)"
+          },
+          "link_button": {
+            "description": "параметр, который указывает, можно ли показывать кнопку связи с новыми карточками другого реестра",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "create_button": {
+            "description": "параметр, который указывает, можно ли показывать кнопку создания карточки другого реестра и автоматической связи с текущей карточкой",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "delete_button": {
+            "description": "параметр, который указывает, можно ли показывать кнопку удаления карточки другого реестра",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "role_type": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "потянутся только объекты с определенной ролью связи",
+            "examples": [
+              2,
+              65,
+              67
+            ]
+          },
+          "accord_name": {
+            "type": "string",
+            "description": "задать название блока",
+            "examples": [
+              "Связанные задачи"
+            ]
+          },
+          "wiz_id": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            ],
+            "description": "id шага техпроцесса, на котором необходимо выводить связанный реестр",
+            "examples": [
+              [
+                5,
+                6
+              ],
+              15
+            ]
+          },
+          "card_place": {
+            "description": "место в карточке(снизу или сверху карточки)",
+            "enum": [
+              "below",
+              "on_top"
+            ]
+          },
+          "after_catid": {
+            "description": "показывать связанные карточки. Не вставлять в случае использования параметра card_place",
+            "type": "integer",
+            "minimum": 0,
+            "examples": [
+              1,
+              6574,
+              567
+            ]
+          },
+          "form_show": {
+            "enum": [
+              "table",
+              "accordion"
+            ],
+            "description": "вид отображения(в виде аккордиона или таблицы)"
+          },
+          "criterion_show": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "tid_criter": {
+                "type": "integer"
+              },
+              "val_criter": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              }
+            },
+            "description": "Критерий показа, скрывать добавление связанного реестра при выборе определенного значения поля"
+          }
+        },
+        "minProperties": 1
+            },
+            {
+                "enum": ["below",
+                    "on_top"]
+            }
+        ]
+      },
+      "archive":
+      {
+        "type":"integer",
+        "minimum":0 ,
+        "description": "|НЕ УКАЗАНО|"
+      }
+    },
+    "minProperties": 1
+  }
+
