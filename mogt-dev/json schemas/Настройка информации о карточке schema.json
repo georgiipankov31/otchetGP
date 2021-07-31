@@ -1,0 +1,161 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "schema для Настройка информации о карточке",
+    "description": "Настройка информации о карточке",
+    "type": "array",
+    "minItems": 1,
+    "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "function_name": {
+          "enum": [
+            "text_val",
+            "link_card"
+          ],
+          "description": "text_val - информация из карточки,  link_card - информация из связанной карточки"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "val_tex": {
+              "type": "string",
+              "description": "любой текст, который хотите указать",
+              "examples": [
+                "просто текст"
+              ]
+            },
+            "val_tid": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "description": "id показателя",
+              "examples": [
+                1,
+                -66,
+                [
+                  45,
+                  -8
+                ]
+              ]
+            },
+            "tep_id": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "description": "id показателя",
+              "examples": [
+                1,
+                -66,
+                [
+                  45,
+                  -8
+                ]
+              ]
+            },
+            "preffix": {
+              "type": "string",
+              "description": "информация до показателя",
+              "examples": [
+                "до"
+              ]
+            },
+            "suffix": {
+              "type": "string",
+              "description": "информация после показателя",
+              "examples": [
+                "после"
+              ]
+            },
+            "empty_val": {
+              "type": "string",
+              "description": " отображение информации при пустом значении поля параметр По умолчанию при пустом значении выводится “-”, иначе - то значение, что пропишем в empty_val",
+              "examples": [
+                "Адрес не заполнен"
+              ]
+            },
+            "func_show": {
+              "enum": [
+                "app.get_object_info"
+              ],
+              "description": "дополнительное использование функции для связанной карточки"
+            },
+            "roleid": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "тип связи",
+              "examples": [
+                9,
+                4
+              ]
+            },
+            "link_itid": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "|в документации не указано|",
+              "examples": [
+                56,
+                754
+              ]
+            },
+            "link_through": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              ],
+              "description": "реестр, через который надо связать с конечным реестром",
+              "examples": [
+                2,
+                [
+                  2,
+                  -8
+                ],
+                -786
+              ]
+            },
+            "role_through_id": {
+              "type": "integer",
+              "minimum": 0,
+              "description": " тип связи с реестром",
+              "examples": [
+                4,
+                786
+              ]
+            }
+          },
+          "description": "настройка"
+        }
+      },
+      "required": [
+        "function_name"
+      ]
+    }
+  }

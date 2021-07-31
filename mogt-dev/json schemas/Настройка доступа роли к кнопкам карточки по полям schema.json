@@ -1,0 +1,47 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Настройка доступа роли к кнопкам карточки по полям",
+    "description": "Используется для ограничения кнопок карточки определенных реестров и полей, в зависимости от значения в показателе. Когда в реестре один пользователь только на просмотр карточку открывает, а другой - эту же карточку на редактирование.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "elements"
+    ],
+    "properties": {
+      "elements": {
+        "type": "array",
+        "description": "elements - содержит массив, в этом массиве содержатся условия",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 3,
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "значение показателя",
+              "examples": [
+                "МВК по вопросам градостроительной деятельности",
+                "Градостроительный совет"
+              ]
+            },
+            "action": {
+              "enum": [
+                "edit",
+                "delete"
+              ],
+              "description": "кнопка (edit - редактирование карточки, delete - удаление карточки)"
+            },
+            "tep_id": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "индентификатор показателя",
+              "examples": [
+                7472
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
